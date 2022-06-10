@@ -14,13 +14,13 @@ Kaavion ei ole pakko olla sekvenssikaavio. Mikä tahansa järkevä kuvaustapa k�
 
 Kaikki oleellinen tieto tämän ja seuraavien kahden tehtävän tekemiseen on tässä osassa. Näiden tehtävien ideana on, että luet tekstin vielä kerran ja mietit tarkkaan mitä missäkin tapahtuu. Ohjelman koodin lukemista ei näissä tehtävissä edellytetä, vaikka sekin on toki mahdollista.
 
-![](FSO_0.4.png)
+![](Src/FSO_0.4.png)
 
 ### <ins>**Harjoitus 0.5 - Single Page App**<ins>
 
 Tee kaavio tilanteesta, jossa käyttäjä menee selaimella osoitteeseen https://studies.cs.helsinki.fi/exampleapp/spa eli muistiinpanojen Single Page App-versioon
 
-![](FSO_0.5.png)
+![](Src/FSO_0.5.png)
 
 ### <ins>**Harjoitus 0.6 - Uusi muistiinpano**<ins>
 
@@ -29,4 +29,4 @@ Tee kaavio tilanteesta, jossa käyttäjä luo uuden muistiinpanon single page -v
 
 Tämä oli osan viimeinen tehtävä ja on aika pushata vastaukset GitHubiin sekä merkata tehdyt tehtävät palautussovellukseen.
 
-![](FSO_0.6.png)
+![](Src/FSO_0.6.png)
