@@ -5,13 +5,13 @@ const Header = (props) => {
   )
 }
 
-// Määritellään Content -osio
+// Määritellään Content -osio. Hakasuluissa oleva numero viittaa listassa olevaan arvoon
 const Content = (props) => {
   return (
     <div>
-      <Part part = {props.part1} exercises = {props.exercises1} />
-      <Part part = {props.part2} exercises = {props.exercises2} />
-      <Part part = {props.part3} exercises = {props.exercises3} />
+      <Part part = {props.parts[0].name} exercises = {props.parts[0].exercises} />
+      <Part part = {props.parts[1].name} exercises = {props.parts[1].exercises} />
+      <Part part = {props.parts[2].name} exercises = {props.parts[2].exercises} />
     </div>
   )
 }
@@ -25,46 +25,40 @@ const Part = (props) => {
   )
 }
 
-// Määritellään kurssin harjoitusten kokonaismäärä
+// Määritellään kurssin harjoitusten kokonaislukumäärä.
+// Parts viittaa muuttujaan, joka on lista olioita.
+// Hakasuluissa oleva numero viittaa listassa olevaan arvoon.
 const Total = (props) => {
   return (
-    <div>
-      Number of exercises {props.exercises}
-    </div>
+    <p>
+      Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}
+    </p>
   )
 }
 
 const App = () => {
   const course = 'Half Stack application development'
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercises: 10
-  }
-  const part2 = {
-    name: 'Using props to pass data',
-    exercises: 7
-  }
-  const part3 = {
-    name: 'State of a component',
-    exercises: 14
-  }
+  const parts = [ // (taulukko) muuttuja, jota pakko referoida, jotta pääsee käsiksi olioihin
+    { // Olio 0
+      name: 'Fundamentals of React',
+      exercises: 10
+    },
+    { // Olio 1
+      name: 'Using props to pass data',
+      exercises: 7
+    },
+    { // Olio 2
+      name: 'State of a component',
+      exercises: 14
+    }
+  ]
 
+  // Käytetään vain muuttujia 'course' ja 'parts', koska ei ole muita vaihtoehtoja.
   return (
     <div>
       <Header course = {course} />
-      
-      <Content
-      part1 = {part1.name}
-      exercises1 = {part1.exercises}
-
-      part2 = {part2.name}
-      exercises2 = {part2.exercises}
-
-      part3 = {part3.name}
-      exercises3 = {part3.exercises} />
-
-      <Total exercises = {part1.exercises + part2.exercises + part3.exercises}/>
-
+      <Content parts = {parts} />
+      <Total parts = {parts}/>
     </div>
   )
 }
