@@ -1,16 +1,26 @@
 import { useState } from 'react'
 
+// Määritellään tilastojen näyttämistä varten
 const Statistics = ({good, neutral, bad}) => {
-  return (
-    <div>
+  // Mikäli palautettta ei ole annettu
+  if (good === 0 & neutral === 0 & bad === 0) {
+    return (
+    <p>No feedback given</p> // Palautetaan tämä teksti
+    )
+  }
+  // Muussa tapauksessa palautetaan tilastot
+  else {
+    return (
+      <div>
         Good {good} <br/>
         Neutral {neutral} <br/>
         Bad {bad} <br/>
         All {good + neutral + bad} <br/>
         Average {((good - bad) / (good + neutral + bad)) * 100} <br/>
         Positive {(good / (good + neutral + bad)) * 100} %
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 const App = () => {
@@ -38,6 +48,8 @@ const App = () => {
       <h1>Statistics</h1>
       
       <Statistics good = {good} neutral = {neutral} bad = {bad} />
+
+
     </div>
   )
 }
