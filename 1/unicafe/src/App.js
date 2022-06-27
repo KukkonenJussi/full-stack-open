@@ -12,15 +12,24 @@ const Statistics = ({good, neutral, bad}) => {
   else {
     return (
       <div>
-        Good {good} <br/>
-        Neutral {neutral} <br/>
-        Bad {bad} <br/>
-        All {good + neutral + bad} <br/>
-        Average {((good - bad) / (good + neutral + bad)) * 100} <br/>
-        Positive {(good / (good + neutral + bad)) * 100} %
+        <StatisticsLine text = "Good" value = {good} />
+        <StatisticsLine text = "Neutral" value = {neutral} />
+        <StatisticsLine text = "Bad" value = {bad} />
+        <StatisticsLine text = "All" value = {good + neutral + bad} />
+        <StatisticsLine text = "Average" value = {((good - bad) / (good + neutral + bad)) * 100} />
+        <StatisticsLine text = "Positive" value = {(good / (good + neutral + bad)) * 100 + "%"} />
       </div>
     )
   }
+}
+
+// Määritellään StatisticsLine, joka hyödyntää Statisticsia.
+const StatisticsLine = ({text, value}) => {
+  return (
+    <div>
+      {text} {value}
+    </div>
+  )
 }
 
 // Määritellään nappi. Napille annetaan toiminto ja nimi.
@@ -39,16 +48,11 @@ const App = () => {
   return (
     <div>
       <h1>Give feedback</h1>
-
       <Button handleClick = {() => setGood(good + 1)} text = "Good" />
       <Button handleClick = {() => setNeutral(neutral + 1)} text = "Neutral" />
       <Button handleClick = {() => setBad(bad + 1)} text = "Bad" />
-      
       <h1>Statistics</h1>
-      
       <Statistics good = {good} neutral = {neutral} bad = {bad} />
-
-
     </div>
   )
 }
