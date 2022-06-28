@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-// Määritellään komponentti nappi, jolle annetaan toiminto ja nimi.
-const Button = (props) => (
-  <button onClick = {props.handleClick}>
-    {props.text}
+// Määritellään nappi. Napille annetaan toiminto ja nimi.
+const Button = ({handleClick, text}) => (
+  <button onClick = {handleClick}>
+    {text}
   </button>
 )
 
@@ -17,8 +17,10 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.'
   ]
-   
+  
+  const points = new Uint8Array(7) // Taulukko seitsemällä alkiolla, jossa jokaisen arvo on nolla
   const [selected, setSelected] = useState(0)
+  const [vote, setVote] = useState(points) // Äänen antamista ja tallettamista varten
 
   // Määritellään seuraava sattumanvarainen
   const RandomAnecdote = () => {
@@ -26,10 +28,18 @@ const App = () => {
     setSelected(index)
   }
 
+  const handleVote = () => {
+    const copy = [...vote] // Kopioidaan taulukon alkioiden arvot (eli nollat)
+    copy[selected] += 1 // Kasvatetaan alkion (anekdootin) arvoa yhdellä
+    setVote(copy)
+  }
+
   return (
     <div>
-      {anecdotes[selected]} <br />
-      <Button handleClick = {() => setSelected(RandomAnecdote)} text = "Next anecdote" />
+      {anecdotes[selected]} <br /><br />
+      Has {vote[selected]} votes <br />
+      <Button handleClick = {RandomAnecdote} text = "Next anecdote" />
+      <Button handleClick = {handleVote} text = "Vote" />
     </div>
   )
 }
