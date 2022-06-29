@@ -1,5 +1,12 @@
 import { useState } from 'react'
 
+// Määritellään Header -osio.
+const Header = (props) => {
+  return(
+    <h3>{props.text}</h3>
+  )
+}
+
 // Määritellään nappi. Napille annetaan toiminto ja nimi.
 const Button = ({handleClick, text}) => (
   <button onClick = {handleClick}>
@@ -7,7 +14,29 @@ const Button = ({handleClick, text}) => (
   </button>
 )
 
-const App = () => {
+// Määritellään anekdootti. Anekdootilla on teksti ja äänten määrä
+const Anectode = (props) => {
+  return (
+    <>
+      {props.anectode} <br />
+      Has {props.vote} votes
+    </>
+  )
+}
+
+// Tehdään otsikko eniten ääniä saaneelle anekdootille, palautetaan anekdootti ja sen äänet
+const MostVotedAnectode = (props) => {
+
+  return (
+    <div>
+      <h3>{props.text} </h3>
+    	{props.anectode} <br />
+      Has {props.vote} votes
+    </div>
+  )
+}
+
+const App = (props) => {
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -21,13 +50,15 @@ const App = () => {
   const points = new Uint8Array(7) // Taulukko seitsemällä alkiolla, jossa jokaisen arvo on nolla
   const [selected, setSelected] = useState(0)
   const [vote, setVote] = useState(points) // Äänen antamista ja tallettamista varten
+  const mostVotes = vote.indexOf(Math.max(...vote)) // Haetaan eniten ääniä saanut alkio (anekdootti)
 
-  // Määritellään seuraava sattumanvarainen
+  // Määritellään seuraava sattumanvarainen anekdootti
   const RandomAnecdote = () => {
     let index = Math.floor(Math.random() * anecdotes.length)
     setSelected(index)
   }
-
+  
+  // Määritellään funktio, joka kasvattaa anekdootin ääntä yhdellä, kun nappia painetaan
   const handleVote = () => {
     const copy = [...vote] // Kopioidaan taulukon alkioiden arvot (eli nollat)
     copy[selected] += 1 // Kasvatetaan alkion (anekdootin) arvoa yhdellä
@@ -36,10 +67,15 @@ const App = () => {
 
   return (
     <div>
-      {anecdotes[selected]} <br /><br />
-      Has {vote[selected]} votes <br />
+      <Header text = "Anectode of the day"/> 
+      <Anectode anectode = {anecdotes[selected]} vote = {vote[selected]} /> <br />
       <Button handleClick = {RandomAnecdote} text = "Next anecdote" />
-      <Button handleClick = {handleVote} text = "Vote" />
+      <Button handleClick = {handleVote} text = "Vote" /> <br />
+      <MostVotedAnectode 
+        text = "Anectode with most votes"
+        anectode = {anecdotes[mostVotes]}
+        vote = {vote[mostVotes]}
+        />
     </div>
   )
 }
