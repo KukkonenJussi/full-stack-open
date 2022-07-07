@@ -27,11 +27,23 @@ const App = (props) => {
     setNewNote(event.target.value)
   }
 
+  // ? ja : on kuin if elsen ehdot. 
+  const notesToShow = showAll
+    ? notes // ? tarkoittaa 'if true'. 
+    : notes.filter(note => note.important === true) // : tarkoittaa 'if false'. Filter -metodi on valmis metodi, jolla suodatetaan haluama(t) asiat
+  /* HUOM! tässä tapauksessa vertailuoperaatio on turha, koska note.important on joko true tai false.
+  Tässä vaiheessa voisi vain kirjoittaa : notes.filter(note => note.important*/
+  
   return (
     <div>
       <h1>Notes</h1>
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all'}
+        </button>
+      </div>
       <ul>
-        {notes.map(note => 
+        {notesToShow.map(note => 
         <Note key = {note.id} note = {note} />
         )}
       </ul>
