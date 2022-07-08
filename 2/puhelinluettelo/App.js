@@ -1,12 +1,5 @@
 import { useState } from 'react'
-
-const Person = (props) => {
-  const {person} = props
-  
-  return (
-    <div>{person.name}</div>
-  )
-}
+import Person from './components/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -16,7 +9,7 @@ const App = () => {
 
   /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
   const addPerson = (event) => {
-    event.preventdefault()
+    event.preventDefault()
     
     const personObject = {
       name: newName,
