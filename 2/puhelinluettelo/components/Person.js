@@ -1,9 +1,9 @@
 const Person = (props) => {
-    const {person} = props
-    
-    return (
-      <div>{person.name}</div>
-    )
-  }
+  const {person} = props
+  
+  return (
+    <div>{person.name} {person.number}</div>
+  )
+}
 
-  export default Person
+export default Person
