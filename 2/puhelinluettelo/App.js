@@ -11,9 +11,37 @@ const App = () => {
   
   const [newName, setNewName] = useState('') // Nimen lisäystä varten
   const [newNumber, setNewNumber] = useState('') // Numeron lisäystä varten
-  // const [filterName, setFilterName] = useState('') // Filtteröintiä varten
+  const [filterName, setFilterName] = useState('') // Filtteröintiä varten
 
-  /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
+
+  // Siirrä tämä omaksi komponentiksi ja tee muutokset! :)
+  const Persons = (props) => {
+
+    return (
+      <div>
+        {persons.map(person => 
+          <Person key = {person.id} person = {person} /> 
+        )}
+      </div>
+    )
+  }
+
+
+  const PersonForm = (props) => {
+
+  /*Tapahtumankäsittelijä, joka synkronoi syötekenttään
+  tehdyt muutokset komponentin App tilaan*/ 
+  const handlePersonChange = (event) => {
+    console.log(event.target.value)
+    setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    console.log(event.target.value)
+    setNewNumber(event.target.value)
+  }
+
+      /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
   const addPerson = (event) => {
     event.preventDefault()
     
@@ -34,17 +62,50 @@ const App = () => {
     console.log('button clicked', event.target)
   }
 
-  /*Tapahtumankäsittelijä, joka synkronoi syötekenttään
-  tehdyt muutokset komponentin App tilaan*/ 
-  const handlePersonChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
+    return (
+      <div>
+      <form onSubmit = {addPerson}>
+        <div>
+          name: <input value = {newName}
+          onChange = {handlePersonChange} />
+        </div>
+        <div>
+          number: <input value = {newNumber}
+          onChange = {handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      </div>
+    )
   }
 
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
+  const Filter = (props) => {
+    const {filterName, handlePersonChange} = props
+
+    // Tähän jotain koodia, jolla saat filtteröinnin toimimaan!
+
+    return (
+      <div>
+        Filter shown with: <input />
+      </div>
+    )
   }
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <Filter />
+      <h3>Add a new</h3>
+      <PersonForm />
+      <h3>Numbers</h3>
+      <Persons />
+    </div>
+  )
+}
+
+/*
 
   return (
     <div>
@@ -67,13 +128,9 @@ const App = () => {
         </div>
       </form>
       <h3>Numbers</h3>
-      <div>
-        {persons.map(person => 
-          <Person key = {person.id} person = {person} /> 
-        )} 
-      </div>
+      <Persons />
     </div>
   )
-}
+*/
 
 export default App
