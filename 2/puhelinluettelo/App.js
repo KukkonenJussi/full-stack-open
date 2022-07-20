@@ -1,34 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 import Person from './components/Person'
 
 const App = () => {
-  const [persons, setPersons] = useState([ // Lista henkilöistä
-    { name: 'Arto Hellas', id: 1, number: '040-123456'},
-    { name: 'Ada Lovelace', id: 2, number: '39-44-5323523'},
-    { name: 'Dan Abramov', id: 3, number: '12-43-234345'},
-    { name: 'Mary Poppendieck', id: 4, number: '39-23-6423122'},
-  ]) 
-  
+  const [persons, setPersons] = useState([]) // Tyhjä lista, johon välitetään tiedot hookin avulla
   const [newName, setNewName] = useState('') // Nimen lisäystä varten
   const [newNumber, setNewNumber] = useState('') // Numeron lisäystä varten
   const [filterName, setFilterName] = useState('') // Filtteröintiä varten
 
-
-  // Siirrä tämä omaksi komponentiksi ja tee muutokset! :)
-  const Persons = (props) => {
-
-    return (
-      <div>
-        {persons.map(person => 
-          <Person key = {person.id} person = {person} /> 
-        )}
-      </div>
-    )
+  // hook, joka kerää ja välittää datan palvelimelta
+  const hook = () => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
   }
 
-
-  const PersonForm = (props) => {
-
+  useEffect(hook, [])
+  
   /*Tapahtumankäsittelijä, joka synkronoi syötekenttään
   tehdyt muutokset komponentin App tilaan*/ 
   const handlePersonChange = (event) => {
@@ -41,7 +33,7 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-      /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
+  /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
   const addPerson = (event) => {
     event.preventDefault()
     
@@ -62,8 +54,22 @@ const App = () => {
     console.log('button clicked', event.target)
   }
 
+  // Siirrä tämä omaksi komponentiksi ja tee muutokset! :)
+  const Persons = (props) => {
+
     return (
       <div>
+        {persons.map(person => 
+          <Person key = {person.id} person = {person} /> 
+        )}
+      </div>
+    )
+  }
+
+
+  const PersonForm = (props) => {
+    
+    return (
       <form onSubmit = {addPerson}>
         <div>
           name: <input value = {newName}
@@ -77,12 +83,10 @@ const App = () => {
           <button type="submit">add</button>
         </div>
       </form>
-      </div>
     )
   }
 
   const Filter = (props) => {
-    const {filterName, handlePersonChange} = props
 
     // Tähän jotain koodia, jolla saat filtteröinnin toimimaan!
 
@@ -96,9 +100,23 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter />
+      <div>
+        Filter shown with: <input />
+      </div>
       <h3>Add a new</h3>
-      <PersonForm />
+      <form onSubmit = {addPerson}>
+        <div>
+          name: <input value = {newName}
+          onChange = {handlePersonChange} />
+        </div>
+        <div>
+          number: <input value = {newNumber}
+          onChange = {handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
       <h3>Numbers</h3>
       <Persons />
     </div>
@@ -106,6 +124,21 @@ const App = () => {
 }
 
 /*
+
+Käytä alapuolella olevaa ensimmäistä return -blokkia., kun olet saanut kaiken toimimaan. 
+Toimii muuten, paitsi yhden merkin jälkeen pitää hiirellä klikata input -kenttää syöttääkseen
+toisen merkin. :/
+
+return (
+    <div>
+      <h2>Phonebook</h2>
+      <Filter />
+      <h3>Add a new</h3>
+      <PersonForm />
+      <h3>Numbers</h3>
+      <Persons />
+    </div>
+  )
 
   return (
     <div>
@@ -131,6 +164,8 @@ const App = () => {
       <Persons />
     </div>
   )
+
+
 */
 
 export default App
