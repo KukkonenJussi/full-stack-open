@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Person from './components/Person'
+import personService from './services/personService' 
 
 const App = () => {
   const [persons, setPersons] = useState([]) // Tyhjä lista, johon välitetään tiedot hookin avulla
@@ -10,12 +10,10 @@ const App = () => {
 
   // hook, joka kerää ja välittää datan palvelimelta
   const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }
 
@@ -48,11 +46,10 @@ const App = () => {
       number: newNumber,
     }
 
-    // Synkronoidaan lisätty henkilö palvelimelle tämän avulla
-    axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
