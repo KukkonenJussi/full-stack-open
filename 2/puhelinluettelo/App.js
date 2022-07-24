@@ -33,6 +33,11 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleFilterChange = (event) => {
+    console.log(event.target.value)
+    setFilterName(event.target.value)
+  }
+
   /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
   const addPerson = (event) => {
     event.preventDefault()
@@ -42,6 +47,15 @@ const App = () => {
       id: persons.length + 1,
       number: newNumber,
     }
+
+    // Synkronoidaan lisätty henkilö palvelimelle tämän avulla
+    axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
 
     // Henkilöä lisätessä tarkistetaan, löytyykö uusi nimi jo olemassa olevasta listasta
     persons.find(person => person.name === newName)
@@ -106,12 +120,10 @@ const App = () => {
       <h3>Add a new</h3>
       <form onSubmit = {addPerson}>
         <div>
-          name: <input value = {newName}
-          onChange = {handlePersonChange} />
+          name: <input value = {newName} onChange = {handlePersonChange} />
         </div>
         <div>
-          number: <input value = {newNumber}
-          onChange = {handleNumberChange} />
+          number: <input value = {newNumber} onChange = {handleNumberChange} />
         </div>
         <div>
           <button type="submit">add</button>
