@@ -6,7 +6,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) // Tyhjä lista, johon välitetään tiedot hookin avulla
   const [newName, setNewName] = useState('') // Nimen lisäystä varten
   const [newNumber, setNewNumber] = useState('') // Numeron lisäystä varten
-  const [filterName, setFilterName] = useState('') // Filtteröintiä varten
+  // const [filterName, setFilterName] = useState('') // Filtteröintiä varten
 
   // hook, joka kerää ja välittää datan palvelimelta
   const hook = () => {
@@ -31,11 +31,6 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  const handleFilterChange = (event) => {
-    console.log(event.target.value)
-    setFilterName(event.target.value)
-  }
-
   /*Osio, jonka avulla lisätään henkilöitä puhelinluetteloon*/
   const addPerson = (event) => {
     event.preventDefault()
@@ -54,6 +49,7 @@ const App = () => {
         setNewNumber('')
       })
 
+    // HUOM! KORJAA TÄMÄ KOHTA! LISÄÄ HENKILÖN, VAIKKA LÖYTYY JO LISTASTA!
     // Henkilöä lisätessä tarkistetaan, löytyykö uusi nimi jo olemassa olevasta listasta
     persons.find(person => person.name === newName)
       ? alert(`${newName} is already added to phonebook`) // Annetaan varoitus (ja ei anneta lisätä nimeä uudelleen), mikäli nimi on jo listassa
@@ -65,45 +61,34 @@ const App = () => {
     console.log('button clicked', event.target)
   }
 
+  /*Osio, jolla poistetaan henkilö. Kun Delete -buttonia
+  painetaan, tulee varoitus kontaktin poistamisesta */
+  const deleteContact = id => {
+
+    if (window.confirm("Do you want to delete this contact?")) {
+      personService
+      .remove(id)
+      .then(returnedPerson => {
+        persons.map(person => person.id !== id ? person : returnedPerson)
+      })
+     setPersons(persons.filter(person => person.id !== id))
+    }
+  }
+
+
   // Siirrä tämä omaksi komponentiksi ja tee muutokset! :)
   const Persons = (props) => {
+    const {persons, deleteContact} = props
 
     return (
       <div>
         {persons.map(person => 
-          <Person key = {person.id} person = {person} /> 
+          <Person 
+            key = {person.id} 
+            person = {person} 
+            deleteContact = {deleteContact}  
+          /> 
         )}
-      </div>
-    )
-  }
-
-
-  const PersonForm = (props) => {
-    
-    return (
-      <form onSubmit = {addPerson}>
-        <div>
-          name: <input value = {newName}
-          onChange = {handlePersonChange} />
-        </div>
-        <div>
-          number: <input value = {newNumber}
-          onChange = {handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-    )
-  }
-
-  const Filter = (props) => {
-
-    // Tähän jotain koodia, jolla saat filtteröinnin toimimaan!
-
-    return (
-      <div>
-        Filter shown with: <input />
       </div>
     )
   }
@@ -127,7 +112,10 @@ const App = () => {
         </div>
       </form>
       <h3>Numbers</h3>
-      <Persons />
+      <Persons 
+        persons = {persons}
+        deleteContact = {deleteContact}
+      />
     </div>
   )
 }
@@ -174,6 +162,43 @@ return (
     </div>
   )
 
+  KUN ERISTÄT HENKILÖN LISÄÄMISEN OMAAN KOMPONENTTIIN!
+  const PersonForm = (props) => {
+    
+    return (
+      <form onSubmit = {addPerson}>
+        <div>
+          name: <input value = {newName}
+          onChange = {handlePersonChange} />
+        </div>
+        <div>
+          number: <input value = {newNumber}
+          onChange = {handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    )
+  }
+
+  KUN ERISTÄT FILTERÖINNIN OMAAN KOMPONENTTIIN!
+  const Filter = (props) => {
+
+    // Tähän jotain koodia, jolla saat filtteröinnin toimimaan!
+
+    return (
+      <div>
+        Filter shown with: <input />
+      </div>
+    )
+  }
+
+  Lisää tämä, App -osioon, kun olet saanut filtteröinnin toimimaan!
+  const handleFilterChange = (event) => {
+    console.log(event.target.value)
+    setFilterName(event.target.value)
+  }
 
 */
 
