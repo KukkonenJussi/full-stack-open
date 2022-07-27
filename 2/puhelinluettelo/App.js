@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import Person from './components/Person'
 import personService from './services/personService' 
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) // Tyhjä lista, johon välitetään tiedot hookin avulla
   const [newName, setNewName] = useState('') // Nimen lisäystä varten
   const [newNumber, setNewNumber] = useState('') // Numeron lisäystä varten
   // const [filterName, setFilterName] = useState('') // Filtteröintiä varten
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // hook, joka kerää ja välittää datan palvelimelta
   const hook = () => {
@@ -40,16 +42,21 @@ const App = () => {
       id: persons.length + 1,
       number: newNumber,
     }
-
+    
     personService
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setErrorMessage(`Contact ${personObject.name} added`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000);
         setNewName('')
         setNewNumber('')
       })
 
     // HUOM! KORJAA TÄMÄ KOHTA! LISÄÄ HENKILÖN, VAIKKA LÖYTYY JO LISTASTA!
+    
     // Henkilöä lisätessä tarkistetaan, löytyykö uusi nimi jo olemassa olevasta listasta
     persons.find(person => person.name === newName)
       ? alert(`${newName} is already added to phonebook`) // Annetaan varoitus (ja ei anneta lisätä nimeä uudelleen), mikäli nimi on jo listassa
@@ -63,13 +70,23 @@ const App = () => {
 
   /*Osio, jolla poistetaan henkilö. Kun Delete -buttonia
   painetaan, tulee varoitus kontaktin poistamisesta */
-  const deleteContact = id => {
+  const deleteContact = (id, name) => {
 
-    if (window.confirm("Do you want to delete this contact?")) {
+    if (window.confirm(`Do you want to delete ${name}?`)) {
       personService
       .remove(id)
       .then(returnedPerson => {
         persons.map(person => person.id !== id ? person : returnedPerson)
+        setErrorMessage(`Contact ${name} removed`)
+        setTimeout(() => {
+          setErrorMessage (null)
+        }, 3000);
+      })
+      .catch(() => {
+        setErrorMessage (`Contact '${name}' was already removed`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000);
       })
      setPersons(persons.filter(person => person.id !== id))
     }
@@ -93,9 +110,25 @@ const App = () => {
     )
   }
 
+  // Siirrä tämä omaksi komponentiksi ja tee muutokset! :)
+  const Notification = (props) => {
+    const {message} = props 
+    
+    if (message === null) {
+      return null
+    }
+
+    return (
+      <div className = "error">
+        {message}
+      </div>
+    )
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message = {errorMessage} />
       <div>
         Filter shown with: <input />
       </div>
@@ -162,6 +195,7 @@ return (
     </div>
   )
 
+
   KUN ERISTÄT HENKILÖN LISÄÄMISEN OMAAN KOMPONENTTIIN!
   const PersonForm = (props) => {
     
@@ -181,6 +215,7 @@ return (
       </form>
     )
   }
+
 
   KUN ERISTÄT FILTERÖINNIN OMAAN KOMPONENTTIIN!
   const Filter = (props) => {
