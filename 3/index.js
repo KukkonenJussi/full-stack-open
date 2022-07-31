@@ -45,3 +45,10 @@ app.get('/api/persons/:id', (request, response) => { // M채채ritell채채n yksitt�
     response.status(404).end()
   }
 })
+
+app.delete('/api/persons/:id', (request, response) => { // M채채ritell채채n yksitt채isen resurssin poistaminen.
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id)
+
+  response.status(204).end()
+})
