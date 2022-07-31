@@ -52,3 +52,22 @@ app.delete('/api/persons/:id', (request, response) => { // Määritellään yksi
 
   response.status(204).end()
 })
+
+app.post('/api/persons', (request, response) => { // Määritellään uuden resurssin lisäys.
+  
+  const maxId = persons.length > 0
+    ? Math.max(...persons.map(n => n.id)) // HUOM! Tehtävänannon mukaan pitäisi generoida joku riittävän iso arvoväli?
+    : 0
+  
+  const person = request.body 
+  person.id = maxId + 1
+
+  persons = persons.concat(person)
+
+  console.log(person)
+  response.json(person)
+})
+
+app.get('/', (req, res) => { // Määritellään handleri (eli tapahtumakäsittelijä), joka hoitaa sovelluksen polkuun / tulevia HTTP GET -pyyntöjä
+  res.send('<h1>Hello World!</h1>')
+})
