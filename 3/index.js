@@ -34,3 +34,14 @@ const PORT = 3001 // Määritetään sovellukselle portti 3001, johon sovellus k
 app.listen(PORT, () => { // Sidotaan muuttujaan app sijoitettu http -palvelin kuuntelemaan porttiin 3001 tulevia HTTP -pyyntöjä
   console.log(`Server running on port ${PORT}`)
 })
+
+app.get('/api/persons/:id', (request, response) => { // Määritellään yksittäisen resurssin haku. Kaksoispiste tarkoittaa, että annetaan polulle (tässä tapauksessa id) parametreja
+  const id = Number(request.params.id) // Ennen parametreja oleva Number tarkoittaa parametrin muuntamista numeroksi
+  const person = persons.find(person => person.id === id) // find -metodilla haetaan taulukosta parametria vastaava tietue ja palautetaan se pyynnön tekijälle
+  
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
+})
