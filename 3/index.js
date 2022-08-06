@@ -1,7 +1,9 @@
+const cors = require('cors')
 const express = require('express')
 const app = express()
 
 app.use(express.json()) // Expressin tarjoama json-parseri. Tällä pääsee käsiksi pyynnön mukana lähetettyyn dataan käsiksi ja voidaan lisätä bodyyn resursseja.
+app.use(cors())
 
 let persons = [
   {
