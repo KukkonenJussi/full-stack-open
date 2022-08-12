@@ -1,4 +1,6 @@
+const Person = require('./models/person')
 const cors = require('cors')
+const { json } = require('express')
 const express = require('express')
 const app = express()
 
@@ -28,24 +30,22 @@ let persons = [
   }
 ]
 
+// Kaikkien muistiinpanojen hakemisesta vastaava käsittelijä
 app.get('/api/persons', (req, res) => { // Määritellään handleri (eli tapahtumakäsittelijä), joka hoitaa sovelluksen polkuun /api/persons tulevia HTTP GET -pyyntöjä
-  res.json(persons)
+  Person.find({}).then(persons => { // // Haetaan oliot Person kannasta. Koska find -metodin parametri on tyhjä olio {}, kaikki kokoelman Person oliot haetaan.
+    res.json(persons)
+  })
 })
 
-const PORT = 3001 // Määritetään sovellukselle portti 3001, johon sovellus käynnistyy
+const PORT = process.env.PORT // Määritetään sovellukselle portti, johon sovellus käynnistyy.
 app.listen(PORT, () => { // Sidotaan muuttujaan app sijoitettu http -palvelin kuuntelemaan porttiin 3001 tulevia HTTP -pyyntöjä
   console.log(`Server running on port ${PORT}`)
 })
 
 app.get('/api/persons/:id', (request, response) => { // Määritellään yksittäisen resurssin haku. Kaksoispiste tarkoittaa, että annetaan polulle (tässä tapauksessa id) parametreja
-  const id = Number(request.params.id) // Ennen parametreja oleva Number tarkoittaa parametrin muuntamista numeroksi
-  const person = persons.find(person => person.id === id) // find -metodilla haetaan taulukosta parametria vastaava tietue ja palautetaan se pyynnön tekijälle
-  
-  if (person) {
+  Person.findById(request.params.id).then(person => {
     response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => { // Määritellään yksittäisen resurssin poistaminen.
@@ -56,18 +56,20 @@ app.delete('/api/persons/:id', (request, response) => { // Määritellään yksi
 })
 
 app.post('/api/persons', (request, response) => { // Määritellään uuden resurssin lisäys.
-  
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => n.id)) // HUOM! Tehtävänannon mukaan pitäisi generoida joku riittävän iso arvoväli?
-    : 0
-  
-  const person = request.body 
-  person.id = maxId + 1
+  const body = request.body
 
-  persons = persons.concat(person)
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'contennt missing'})
+  }
+  
+  const person = new Person({
+    name: body.content,
+    number: body.content,
+  })
 
-  console.log(person)
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 app.get('/', (req, res) => { // Määritellään handleri (eli tapahtumakäsittelijä), joka hoitaa sovelluksen polkuun / tulevia HTTP GET -pyyntöjä

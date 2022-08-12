@@ -57,7 +57,7 @@ if (process.argv.length === 5) {
 /* Mikäli parametreja ei ole oikea määrä
 (joko numero puuttuu tai henkilön koko nimi ei ole hipsuissa),
 tulostetaan konsoliin virheilmoitus.*/
-if (process.argv.length === 4 || process.argv.length > 5) {
+if (process.argv.length === 4 || process.argv.length >= 6) {
     console.log('If there are spaces in the name, enclose the name in quotation marks.') // Tulostetaan konsoliin teksti.
     mongoose.connection.close() // Suljetaan yhteys tietokantaan. Tärkeää, koska muutoin ohjelman suoritus EI pääty.
 }
