@@ -3,9 +3,10 @@ const mongoose = require('mongoose')
 // MongoDB:n URI -osoite, onka avulla sovelluksemme käyttämä MongoDB-kirjasto saa yhteyden kantaan.
 // `mongodb+srv://Jussi:${password}@cluster0.f6hib1k.mongodb.net/phonebookApp?retryWrites=true&w=majority` tietokannan osoite
 // HUOM! muuta alapuolella oleva url muotoon const url = process.env.MONGODB_URI
-const url = `mongodb+srv://Jussi:${password}@cluster0.f6hib1k.mongodb.net/phonebookApp?retryWrites=true&w=majority` // Tietokannan osoitetta EI kannata kirjoittaa koodiin tietoturvasyistä johtuen. Osoite annetaan sovellukselle ympäristömuuttujan MONGODB_URI välityksellä
+const url = process.env.MONGODB_URI 
 
 console.log('connecting to', url)
+
 mongoose.connect(url) // Avataan yhteys
     .then(result => { // Viestin onnistuneen yhteyden muodostamisessa
         console.log('connected to MongoDB') 
@@ -22,7 +23,8 @@ const personSchema = new mongoose.Schema({
   number: String, // Numero on neljäs indeksi eli viides argumentti
 })
 
-/* Muotoillaan Mongoosen palauttamien olioiden ulkoasua */
+/* Muotoillaan Mongoosen palauttamat oliot haluttuun muotoon.
+Jätetään pois kentät _id ja __v*/
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
