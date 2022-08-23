@@ -77,13 +77,13 @@ app.delete('/api/persons/:id', (request, response, next) => { // Määritellää
 app.post('/api/persons', (request, response) => { // Määritellään uuden resurssin lisäys.
   const body = request.body
 
-  if (body.content === undefined) {
+  if (body.name === undefined || body.number === undefined) {
     return response.status(400).json({ error: 'content missing' })
   }
 
   const person = new Person({
-    name: body.content,
-    number: body.content,
+    name: body.name,
+    number: body.number,
   })
 
   person.save().then(savedPerson => {
