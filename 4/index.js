@@ -1,8 +1,12 @@
-const http = require('http') // Otetaan käyttöön Noden sisäänrakennettu web-palvelin
+//require('dotenv').config() // Tätä kautta saadaan ympäristömuuttujat 
+//const config = require('./utils/config') 
+//const logger = require('./utils/logger')
+const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const mongoose = require('mongoose') // JavaScript -olioiden tallettaminen MongoDB:n dokumenteiksi on suoraviivaista tämän avulla
+const mongoose = require('mongoose') 
+
 
 const blogSchema = mongoose.Schema({
   title: String,
@@ -13,7 +17,7 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
+const mongoUrl = 'mongodb+srv://Jussi:FSO2022@blog.tbbsrvd.mongodb.net/?retryWrites=true&w=majority'
 mongoose.connect(mongoUrl)
 
 app.use(cors())
@@ -36,6 +40,7 @@ app.post('/api/blogs', (request, response) => {
       response.status(201).json(result)
     })
 })
+
 
 const PORT = 3003
 app.listen(PORT, () => {
