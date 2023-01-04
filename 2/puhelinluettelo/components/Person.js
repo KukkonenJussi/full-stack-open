@@ -1,15 +1,14 @@
-const Person = (props) => {
-  const {person, deleteContact} = props
-  const label = "Delete"
+const Person = ({ person, deleteContact }) => {
+  const label = 'Delete'
   
-  /* Toiminnallisuus buttonille! 
-  <button onClick = {handleDeleteClick}>{label}</button> */
   return (
-    <div>
-      {person.name} {person.number} 
-      <button onClick = {() => deleteContact(person.id, person.name)}>{label}</button>
-    </div>
-  )
+      <div>
+          <li className="person">
+          {person.name} {person.number}
+          <button onClick={() => deleteContact(person.id)}>{label}</button>
+          </li>
+      </div>
+  ) 
 }
 
 export default Person
