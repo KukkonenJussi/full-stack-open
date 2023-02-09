@@ -1,9 +1,13 @@
 const info = (...params) => { // Normaaleja logiviestejä varten
-    console.log(...params)
+    if (process.env.NODE_ENV !== 'test') {
+        console.log(...params)
+    }
 }
 
 const error = (...params) => { // Virhetilanteita varten 
-    console.log(...params)
+    if (process.env.NODE_ENV !== 'test') {
+        console.log(...params)
+    }
 }
 
 module.exports = {
