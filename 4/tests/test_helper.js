@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/users')
 
 const initialBlogs = [ // Useamman blogin sisältävä lista
   {
@@ -27,12 +28,18 @@ const nonExistinId = async () => {
     return blog._id.toString()
 }
 
-// Tämän avulla voidaan tarkastaa sovelluksen tietokannassa olevat bl
+// Tämän avulla voidaan tarkastaa sovelluksen tietokannassa olevat blogit
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
-    return blogs.map(blog => blog.toJSON)
+    return blogs.map(blog => blog.toJSON())
+}
+
+// Tämän avulla voidaan tarkastaa sovelluksen tietokannassa olevat käyttäjät
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
 }
 
 module.exports = {
-    initialBlogs, nonExistinId, blogsInDb
+    initialBlogs, nonExistinId, blogsInDb, usersInDb
 }
