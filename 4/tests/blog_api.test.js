@@ -53,7 +53,7 @@ test('identifier _id is defined', async () => {
     expect(response.body[0]._id).not.toBeDefined()
 })
 
-// 4.10
+// 4.10 Testi ei toiminut enään, kuin tein tehtävän 4.17. Tehtävän 4.15 jälkeen toimi!
 test('a valid blog can be added ', async () => {
     const newBlog = {
         title: 'Hirvenpyytäjät',
@@ -73,7 +73,7 @@ test('a valid blog can be added ', async () => {
 
 })
 
-// 4.11 Like 0, jos ei ole annettu
+// 4.11 Like 0, jos ei ole annettu. Testi ei toiminut enään, kuin tein tehtävän 4.17. Tehtävän 4.15 jälkeen toimi!
 test('Like equals 0 if undefined', async () => {
     const newBlog2 = {
         title: 'Iltani hirvipeijaisissa',

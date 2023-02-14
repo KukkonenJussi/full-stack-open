@@ -1,13 +1,19 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/users')
 
 blogsRouter.get('/', async (request, response) => { // Haetaan tietokannasta blogit käyttäen async -toimintoa
-    const blogs = await Blog.find({})
+    const blogs = await Blog
+        .find({})
+        .populate('user', { username: 1, name: 1 })
+
     response.json(blogs)
 })
   
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
+
+    const user = await User.findById(body.userId)
 
     if (!request.body.title && !request.body.url) {
         response.status(400).send('Bad Request')
@@ -17,9 +23,15 @@ blogsRouter.post('/', async (request, response) => {
             title: body.title,
             author: body.author,
             url: body.url,
-            likes: body.likes || 0
+            likes: body.likes || 0,
+            user: user._id
         })
+        
         const savedBlog = await blog.save()
+        user.blogs = user.blogs.concat(savedBlog._id)
+        
+        await user.save()
+
         response.status(201).json(savedBlog)
     }
 })
