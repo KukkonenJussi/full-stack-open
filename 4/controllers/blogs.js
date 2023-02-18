@@ -1,19 +1,20 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/users')
+const jwt = require('jsonwebtoken')
 
-blogsRouter.get('/', async (request, response) => { // Haetaan tietokannasta blogit käyttäen async -toimintoa
+blogsRouter.get('/', async (request, response) => { 
     const blogs = await Blog
         .find({})
         .populate('user', { username: 1, name: 1 })
 
     response.json(blogs)
-})
-  
+}) 
+
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
 
-    const user = await User.findById(body.userId)
+    const user = await User.findById(body.userId) 
 
     if (!request.body.title && !request.body.url) {
         response.status(400).send('Bad Request')
