@@ -6,7 +6,7 @@ import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -50,19 +50,38 @@ const App = () => {
     event.preventDefault()
     
     const blogObject = {
-      title: event.target.title.value,
-      author: event.target.author.value,
-      url: event.target.url.value,
+      title: title,
+      author: author,
+      url: url,
     }
 
-    blogService
-      .create(blogObject)
-        .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
-          setTitle('')
-          setAuthor('')
-          setUrl('')
-        })
+    if (
+      blogObject.title === '' || 
+      blogObject.author === '' || 
+      blogObject.url === ''
+      ) {
+      setMessage('Title, author and url needed!')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    } 
+    else {
+      blogService
+        .create(blogObject)
+          .then(returnedBlog => {
+            setBlogs(blogs.concat(returnedBlog))
+            setMessage(`A new blog ${blogObject.title} by ${blogObject.author} added`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000);
+            setTitle('')
+            setAuthor('')
+            setUrl('')
+          })
+    }
   }
   
 
@@ -84,11 +103,11 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      setMessage('Wrong username or password')
       setUsername('')
       setPassword('')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   
@@ -158,7 +177,7 @@ const App = () => {
       <div>
         <h2>Log in to application</h2>
 
-        <Notification message={errorMessage} />
+        <Notification message={message} />
         
         {!user && loginForm()}
         
@@ -170,7 +189,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
 
-      <Notification message={errorMessage} />
+      <Notification message={message} />
 
       {!user && loginForm()}
       {user && <div>
