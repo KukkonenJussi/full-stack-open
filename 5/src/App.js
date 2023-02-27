@@ -7,6 +7,9 @@ import Notification from './components/Notification'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -17,6 +20,52 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value)
+    console.log(event)
+  }
+
+  const handleAuthorChange = (event) => {
+    setAuthor(event.target.value)
+    console.log(event)
+  }
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value)
+    console.log(event)
+  }
+
+
+  const addBlog = async (event) => {
+    event.preventDefault()
+    
+    const blogObject = {
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value,
+    }
+
+    blogService
+      .create(blogObject)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+        })
+  }
+  
+
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('loggin in with', username, password)
@@ -25,6 +74,12 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
+
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -37,7 +92,42 @@ const App = () => {
       }, 5000)
     }
   
-  } 
+  }
+  
+  const handleLogout = async () => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    // window.localStorage.clear() // Vaihtoehtoinen tapa: local storagen tilan kokonaan nollaava komento.
+    setUsername('')
+    setPassword('')
+  }
+
+  const blogForm = () => (
+    <form onSubmit={addBlog}>
+      <div>
+      Title: <input
+        name='title'
+        value={title}
+        onChange={handleTitleChange}
+        />
+      </div>
+      <div>
+      Author: <input
+        name='author'
+        value={author}
+        onChange={handleAuthorChange}
+        />
+      </div>
+      <div>
+      Url: <input
+        name='url'
+        value={url}
+        onChange={handleUrlChange}
+        />
+      </div>
+
+      <button type="submit">save</button>
+    </form>  
+  )
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -84,7 +174,8 @@ const App = () => {
 
       {!user && loginForm()}
       {user && <div>
-       <p>{user.name} logged in</p>
+        <p>{user.name} logged in <button onClick={handleLogout} >logout</button></p>
+        {blogForm()}
       </div>
     } 
 
