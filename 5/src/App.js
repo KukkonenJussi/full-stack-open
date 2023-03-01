@@ -14,6 +14,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [toggle, setToggle] = useState(false)
+  const BlogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -42,7 +43,7 @@ const App = () => {
       setMessage('Title, author and url needed!')
       setTimeout(() => {
         setMessage(null)
-      }, 2000)
+      }, 5000)
     }
     else {
       blogService
@@ -93,7 +94,7 @@ const App = () => {
     setPassword('')
   }
 
-  const BlogFormRef = useRef()
+
 
   return (
     <div>
@@ -102,7 +103,7 @@ const App = () => {
       <Notification message={message} />
 
       {!user && // Näkymä, mikäli ei ole kirjauduttu
-        <Togglable buttonLabel="log in">
+        <Togglable buttonLabel="log in" buttonLabel2="cancel">
           <LoginForm
             username={username}
             password={password}
@@ -115,8 +116,8 @@ const App = () => {
       {user && // Näkymä, mikäli kirjauduttu
         <div>
           <p>{user.name} logged in <button onClick={handleLogout} >logout</button></p>
-          <Togglable buttonLabel="new blog" ref={BlogFormRef}>
-            <BlogForm createBlog={addBlog}/>
+          <Togglable buttonLabel="new blog" buttonLabel2="cancel" ref={BlogFormRef}>
+            <BlogForm createBlog={addBlog} />
           </Togglable>
 
           {blogs.map(blog =>
