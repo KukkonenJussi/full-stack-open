@@ -120,7 +120,9 @@ const App = () => {
             <BlogForm createBlog={addBlog} />
           </Togglable>
 
-          {blogs.map(blog =>
+          {blogs
+            .sort((a,b) => a.likes > b.likes ? -1 : 1) // Lajitellaan blogit tykkäysten perusteellaa suurimmasta pienimpään
+            .map(blog =>
             <Blog
               key={blog.id}
               blog={blog}
