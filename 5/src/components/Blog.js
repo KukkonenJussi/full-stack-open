@@ -19,7 +19,8 @@ const Blog = ({ blog }) => {
   return (
     <div style={blogStyle}>
       {!visible && // Ilman lisätietoja (vain title ja author)
-        <div>{blog.title} by {blog.author} {" "}
+        <div>
+          {blog.title} {blog.author} {" "}
           <button
             onClick={toggleVisibility}>{visible ? 'hide' : 'show'}
           </button>
