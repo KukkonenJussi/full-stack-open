@@ -40,29 +40,6 @@ app.use(requestLogger)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.static('build'))
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456"
-  },
-  {
-    id: 2,
-    name: "Ada Lovelance",
-    number: "39-44-5323523"
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345"
-  },
-  {
-    id: 4,
-    name: "Mary Poppendick",
-    number: "39-23-64223122"
-  }
-]
-
 app.get('/', (request, response) => { // Määritellään handleri (eli tapahtumakäsittelijä), joka hoitaa sovelluksen polkuun / tulevia HTTP GET -pyyntöjä
   response.send('<h1>Hello World!</h1>')
 })
@@ -108,8 +85,6 @@ app.post('/api/persons', (request, response, next) => { // Määritellään uude
     number: body.number,
   })
 
-  const personExists = persons.find((person) => person.name === body.name)
-
   if (body.name === undefined) { // Mikäli nimi puuttuu, heitetään errori
     return response.status(400).json({ error: 'name missing!' })
   }
@@ -119,13 +94,6 @@ app.post('/api/persons', (request, response, next) => { // Määritellään uude
       error: 'number missing!'
     })
   }
-
-  if (personExists) { // Mikäli numero puuttuu, heitetään errori
-    return response.status(400).json({
-      error: 'name must be unique!'
-    })
-  }
-
 
   person.save()
     .then(savedPerson => {
