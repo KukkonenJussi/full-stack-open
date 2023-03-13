@@ -157,7 +157,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 app.use(unknownEndpoint) // Tärkeä olla käytössä vasta täällä lopussa, muutoin ei pääse esim. info -sivulle!
-// app.use(errorHandler)
+app.use(errorHandler)
 
 const PORT = process.env.PORT // Määritetään sovellukselle portti. Portti määritelty process.envin avulla, eikä suoraan koodiin kirjoitettuna
 app.listen(PORT, () => { // Sidotaan muuttujaan app sijoitettu http -palvelin kuuntelemaan porttiin tulevia HTTP -pyyntöjä
