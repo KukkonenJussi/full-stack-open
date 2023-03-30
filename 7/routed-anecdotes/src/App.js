@@ -85,9 +85,9 @@ const CreateNew = (props) => {
 
   const resetFields = (e) => {
     e.preventDefault() // Ilman tätä resettiä painettaessa lisää anekdootin
-    content.onReset()
-    author.onReset()
-    info.onReset()
+    content.reset() // Jos nimi on esim. onReset, virheilmoitusta ei tule
+    author.reset()
+    info.reset()
   }
 
   return (
