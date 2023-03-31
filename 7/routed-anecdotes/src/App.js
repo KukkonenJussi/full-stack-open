@@ -67,13 +67,15 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content = useField('content')
-  const author = useField('author')
-  const info = useField('info')
+  const { reset: resetContent, ...content } = useField('content')
+  const { reset: resetAuthor, ...author } = useField('author')
+  const { reset: resetInfo, ...info } = useField('info')
+  
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    
     props.addNew({
       content: content.value,
       author: author.value,
@@ -84,11 +86,10 @@ const CreateNew = (props) => {
   }
 
   const resetFields = (e) => {
-    e.preventDefault() // Ilman tätä resettiä painettaessa lisää anekdootin
-    content.reset() // Jos nimi on esim. onReset, virheilmoitusta ei tule
-    author.reset()
-    info.reset()
-  }
+    resetContent()
+    resetAuthor()
+    resetInfo()
+  } 
 
   return (
     <div>
@@ -106,8 +107,8 @@ const CreateNew = (props) => {
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
-        <button onClick={resetFields}>reset</button>
+        <button type='submit'>create</button>
+        <button type='button' onClick={resetFields}>reset</button>
       </form>
     </div>
   )
